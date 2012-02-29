@@ -152,7 +152,7 @@ classdef vertex < handle
                         if ishandle(vtxStack(iVTX).h2guiObj)
                             set(vtxStack(iVTX).h2guiObj,'LineWidth',0.5)
                             vtxStack(iVTX).selected = 0;
-                            h2Select = findobj(get(vtx.h2guiObj,'uicontextmenu'),'Label','Unselect');
+                            h2Select = findobj(get(vtxStack(iVTX).h2guiObj,'uicontextmenu'),'Label','Unselect');
                             set(h2Select,'Label','Select')
                         end
                     end

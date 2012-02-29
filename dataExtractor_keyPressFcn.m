@@ -45,7 +45,14 @@ setappdata(h2fig,'stateVars_traceMode',currentMode);
 
 %whenever toggle mode is activated
 selectedVertexId = getappdata(gcf,'selectedVertexId');
-if ~isempty(selectedVertexId);trace = selectedVertexId;else trace = [];end
+
+%by default always start empty trace
+trace = [];
+if ~isempty(selectedVertexId);
+    %by default unselect vertex
+    vtxStack = getappdata(h2fig,'vtxStack');
+    vtxStack(selectedVertexId).toggleSelectState;
+end
 setappdata(gcf,'trace',trace);
 
 if currentMode
