@@ -87,7 +87,10 @@ classdef edge < handle
             setappdata(gcf,'edgStack',edgStack);
             
             pairList = getappdata(gcf,'pairList');
-            pairs2deactivate = pairList(:,1)== edg.id | pairList(:,2) == edg.id;
+            pairs2deactivate = (pairList(:,1)== edg.v1 & pairList(:,2) == edg.v2) |...
+                (pairList(:,2)== edg.v2 & pairList(:,1) == edg.v1) ;
+            
+            
             pairList(pairs2deactivate,3) = 0;
             
             setappdata(gcf,'pairList',pairList);

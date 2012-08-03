@@ -27,6 +27,9 @@ pairList = getappdata(h2fig,'pairList');
 
 %keep only active pairs
 pairList = pairList(pairList(:,3)>0,1:2);
+ne = size(pairList,1);
+if ne == 1;pairList=[pairList;pairList([2,1])];end % ensure indexing works for a graph with just one edge
+
 
 %now validate each pair (both vertices have to be active)
 
@@ -36,14 +39,22 @@ pairList = pairList(activePairs,:);
 
 %build lookup table for vertex indices
 [ids] = unique(pairList(:));
+
+%find non-connected active vertices
+activeVtx = find([vtxStack.active]);
+kv0ids = setdiff(activeVtx,ids);
+ids = union(ids,activeVtx);
 nv = numel(ids);
 idsLUT = zeros(max(ids),1);
 idsLUT(ids) = 1 : nv;
 
 %extract x,y and type
+G.nv = nv;
+G.ne = ne;
 G.x = [vtxStack(ids).x];
 G.y = [vtxStack(ids).y];
 G.type = [vtxStack(ids).type];
+
 
 %update pairList with consecutive ids
 pairList = idsLUT(pairList);
@@ -52,7 +63,10 @@ pairList = idsLUT(pairList);
 G.Adj = sparse(pairList(:,1),pairList(:,2),ones(size(pairList,1),1),nv,nv);
 
 
-figure;gplot(G.Adj,[G.x' G.y'],'r.-');set(gca,'ydir','reverse')
+figure;gplot(G.Adj,[G.x' G.y'],'r.-');set(gca,'ydir','reverse');
+%add non connected vertices as gplot plots only connected ones
+hold on
+plot(G.x(idsLUT(kv0ids)),G.y(idsLUT(kv0ids)),'r.')
 
 %auto save
 rootDir = getappdata(h2fig,'rootDir');
