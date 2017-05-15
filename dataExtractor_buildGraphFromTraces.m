@@ -67,9 +67,12 @@ figure;gplot(G.Adj,[G.x' G.y'],'r.-');set(gca,'ydir','reverse');
 %add non connected vertices as gplot plots only connected ones
 hold on
 plot(G.x(idsLUT(kv0ids)),G.y(idsLUT(kv0ids)),'r.')
+set(gca,'ydir','reverse');
+
 
 %auto save
 rootDir = getappdata(h2fig,'rootDir');
+if ~isdir(rootDir);rootDir=pwd;warning ('Saved export graph to  mat file in current directory as rootDir does not exists!');end
 baseName = getappdata(h2fig,'baseFileName');
 fname = fullfile(rootDir,sprintf('%s_%s.mat',baseName,datestr(now,'YYYYmmdd_HHMMSS')));
 save(fname,'G')
